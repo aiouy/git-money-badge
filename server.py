@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import io
+import os
 import requests
 from PIL import Image, ImageFont, ImageDraw
 from flask import Flask, request, send_file
@@ -11,6 +12,7 @@ app = Flask(__name__)
 @app.route('/')
 def nothing():
     return 'nothing here'
+
 
 @app.route('/badge/<path:path>')
 def bounty_badge(path):
@@ -45,6 +47,6 @@ def bounty_badge(path):
 
     return serve_pil_image(badge)
 
-
+port = os.getenv('VCAP_APP_PORT', '5000')
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port='5000')
+    app.run(host='0.0.0.0', port=int(port))
