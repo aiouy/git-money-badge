@@ -3,7 +3,7 @@ import io
 import os
 import requests
 from PIL import Image, ImageFont, ImageDraw
-from flask import Flask, request, send_file
+from flask import Flask, request, send_file, make_response
 
 
 app = Flask(__name__)
@@ -43,7 +43,10 @@ def bounty_badge(path):
         img_io = io.BytesIO()
         pil_img.save(img_io, 'JPEG', quality=70)
         img_io.seek(0)
-        return send_file(img_io, mimetype='image/jpeg')
+        response = make_response(send_file(img_io, mimetype='image/jpeg'))
+        response.headers['Cache-Control'] = 'no-cache'
+        response.headers['Expires'] = -1
+        return response
 
     return serve_pil_image(badge)
 
